@@ -58,7 +58,7 @@ exports.joinRoom = async (req, res) => {
 };
 
 exports.startGame = async (req, res) => {
-    const { userId, roomCode } = req.body; // Assume userId is passed in the request
+    const { userId, roomCode } = req.body; 
 
     try {
       const room = await Room.findOne({ roomCode: roomCode });
@@ -66,12 +66,12 @@ exports.startGame = async (req, res) => {
         return res.status(404).json({ message: "Room not found" });
       }
   
-      if (room.owner.toString() !== userId) {
+      if (room.ownerId.toString() !== userId) {
         return res.status(403).json({ message: "Only the room owner can start the game" });
       }
   
       if (room.participants.length > 0) {
-        room.giftOrder = shuffleArray(room.participants.map(p => p.userId.toString()));
+        room.giftOrder = shuffleArray(room.participants.map(p => p._id.toString()));
         room.roomStatus = 1;
         room.currentTurn = room.giftOrder[0]; // Start with the first participant
         await room.save();
