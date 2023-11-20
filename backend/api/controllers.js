@@ -6,6 +6,12 @@ const socketIo = require('socket.io');
 exports.createRoom = async (req, res) => {
     try {
         const { userName } = req.body;
+        
+        // Check if userName is provided in the request
+        if (!userName || userName.trim() === '') {
+            return res.status(400).json({ message: 'Username is required' });
+        }
+
         const roomCode = await createUniqueRoomCode();
         const newRoom = new Room({
           roomCode: roomCode, 
@@ -13,11 +19,14 @@ exports.createRoom = async (req, res) => {
           giftOrder: []
         });
         newRoom.participants.push({ name: userName });
+        newRoom.ownerId = newRoom.participants[0]._id;
         await newRoom.save();
-        res.status(201).json({ roomCode: newRoom.roomCode });
-      } catch (err) {
+
+        const userId = newRoom.participants[newRoom.participants.length - 1]._id;
+        res.status(200).json({ roomCode: roomCode, userId: userId });
+    } catch (err) {
         res.status(500).json({ message: err.message });
-      }
+    }
 };
 
 exports.joinRoom = async (req, res) => {
