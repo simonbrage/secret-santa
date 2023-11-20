@@ -32,13 +32,26 @@ exports.createRoom = async (req, res) => {
 exports.joinRoom = async (req, res) => {
     try {
         const { roomCode, userName } = req.body;
+
+        // Check if roomCode is provided in the request
+        if (!roomCode || roomCode.trim() === '') {
+            return res.status(400).json({ message: 'Room code is required' });
+        }
+
+        // Check if userName is provided in the request
+        if (!userName || userName.trim() === '') {
+            return res.status(400).json({ message: 'Username is required' });
+        }
+
         const room = await Room.findOne({ roomCode: roomCode });
         if (!room) {
           return res.status(404).json({ message: "Room not found" });
         }
         room.participants.push({ name: userName });
         await room.save();
-        res.status(200).json({ message: "Joined room successfully" });
+
+        const userId = room.participants[room.participants.length - 1]._id;
+        res.status(200).json({ roomCode: roomCode, userId: userId });
       } catch (err) {
         res.status(500).json({ message: err.message });
       }
