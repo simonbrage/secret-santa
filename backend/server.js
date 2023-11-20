@@ -11,6 +11,12 @@ const io = socketIo(server); // Setup Socket.IO
 
 app.use(express.json()); // for parsing application/json
 
+// Middleware to attach io to the req object
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 const PORT = process.env.PORT || 3000;
 
 const MONGODB_URI = process.env.MONGODB_URI;
