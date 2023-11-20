@@ -85,31 +85,48 @@ exports.startGame = async (req, res) => {
 };
 
 exports.placeGift = async (req, res) => {
-    const { userId, roomCode } = req.body; // Assume userId is passed in the request
+    const { userId, roomCode } = req.body;
+    const io = req.io;
 
     try {
       const room = await Room.findOne({ roomCode: roomCode });
       if (!room) {
         return res.status(404).json({ message: "Room not found" });
       }
-  
-      const participantIndex = room.participants.findIndex(p => p.userId.toString() === userId);
+
+      // Check if game has started and that game is not over
+      if (room.roomStatus !== 1) {
+        return res.status(403).json({ message: "Game has not started or is over" });
+      }
+      
+      // Check that the participant is in the room
+      const participantIndex = room.participants.findIndex(p => p._id.toString() === userId);
       if (participantIndex === -1) {
         return res.status(404).json({ message: "Participant not found in the room" });
       }
-  
-      room.participants[participantIndex].hasPlacedGift = true;
-  
-      // Check if all participants have placed their gifts
-      const allGiftsPlaced = room.participants.every(p => p.hasPlacedGift);
-      if (allGiftsPlaced) {
-        room.roomStatus = 2; // Game completed
-      } else {
-        // Update the current turn to the next participant in the gift order
-        const currentTurnIndex = room.giftOrder.indexOf(userId);
-        room.currentTurn = room.giftOrder[(currentTurnIndex + 1) % room.giftOrder.length];
-        io.to(roomCode).emit('nextTurn', { currentTurn: room.currentTurn });
+
+      // Check that it is the participant's turn
+      if (room.currentTurn.toString() !== userId) {
+        return res.status(403).json({ message: "It is someone else's turn" });
       }
+
+      // Check that the participant has not placed a gift yet
+      if (room.participants.find(p => p._id.toString() === userId).hasPlacedGift) {
+        return res.status(403).json({ message: "You have already placed a gift" });
+      }
+
+      room.participants[participantIndex].hasPlacedGift = true;
+
+      // Check if all participants have placed a gift
+      if (room.participants.every(p => p.hasPlacedGift)) {
+        room.roomStatus = 2;
+      } else {
+        // Move to the next participant
+        const currentIndex = room.giftOrder.findIndex(id => id.toString() === userId);
+        const nextIndex = (currentIndex + 1) % room.giftOrder.length;
+        room.currentTurn = room.giftOrder[nextIndex];
+        io.to(roomCode).emit('nextTurn', { currentTurn: room.currentTurn });
+      }      
   
       await room.save();
       res.status(200).json({ message: "Gift placed", room: room });
