@@ -1,5 +1,5 @@
-const { Room, Participant } = require('../models/model'); // Adjust the path as needed
-const { createUniqueRoomCode, shuffleArray } = require('../utils/utility'); // Adjust the path
+const { Room, Participant } = require('../model');
+const { createUniqueRoomCode, shuffleArray } = require('../utility');
 
 exports.createRoom = async (req, res) => {
     try {
