@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const ParticipantSchema = new mongoose.Schema({
-  userId: mongoose.Schema.Types.ObjectId,
   name: String,
   hasPlacedGift: { type: Boolean, default: false },
   // You can add more fields if needed
