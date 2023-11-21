@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import CreateRoom from './pages/CreateRoom';
 import JoinRoom from './pages/JoinRoom';
+import RoomLobby from './pages/RoomLobby';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/create-room" element={<CreateRoom />} />
         <Route path="/join-room" element={<JoinRoom />} />
+        <Route path="/room-lobby/:roomId" element={<RoomLobby />} />
         {/* Define other routes with 'element' prop */}
       </Routes>
     </Router>
