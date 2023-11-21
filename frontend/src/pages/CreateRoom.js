@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-// Import Axios or another HTTP client if you need to make API requests
 
 const CreateRoom = () => {
     const [name, setName] = useState('');
     const navigate = useNavigate();
   
     const handleCreate = async () => {
-      // Call API to create room
-      // On success, navigate to the room lobby
-      // navigate('/room-lobby', { state: { roomData: response.data } });
+        if (!name) {
+          alert("Please enter your name");
+          return;
+        }
+      
+        try {
+            const response = await axios.post('http://localhost:3000/api/create-room', { userName: name });
+            const roomId = response.data.roomId;
+            navigate(`/room-lobby/${roomId}`);
+        } catch (error) {
+          console.error('There was an error creating the room', error);
+          // Handle error (show message to user, etc.)
+        }
     };
 
   return (
