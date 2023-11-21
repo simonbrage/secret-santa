@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,10 +11,25 @@ const JoinRoom = () => {
   const navigate = useNavigate();
 
   const handleJoin = async () => {
-    // Call API to join room
-      // On success, navigate to the room lobby
-      // navigate('/room-lobby', { state: { roomData: response.data } });
-  };
+        if (!roomCode) {
+            alert("Please enter a room code");
+            return;
+        }
+
+        if (!name) {
+            alert("Please enter your name");
+            return;
+        }
+    
+        try {
+            const response = await axios.post('http://localhost:3000/api/join-room', { userName: name, roomCode: roomCode });
+            const roomId = response.data.roomId;
+            navigate(`/room-lobby/${roomId}`);
+        } catch (error) {
+            console.error('There was an error creating the room', error);
+            // Handle error (show message to user, etc.)
+        }
+    };
 
   return (
     <div className="h-screen flex flex-col mx-auto text-center p-12 justify-center items-center">
