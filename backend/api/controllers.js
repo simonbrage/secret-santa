@@ -23,7 +23,8 @@ exports.createRoom = async (req, res) => {
         await newRoom.save();
 
         const userId = newRoom.participants[newRoom.participants.length - 1]._id;
-        res.status(200).json({ roomCode: roomCode, userId: userId });
+        const roomId = newRoom._id;
+        res.status(200).json({ roomCode: roomCode, userId: userId, roomId: roomId });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -51,7 +52,8 @@ exports.joinRoom = async (req, res) => {
         await room.save();
 
         const userId = room.participants[room.participants.length - 1]._id;
-        res.status(200).json({ roomCode: roomCode, userId: userId });
+        const roomId = room._id;
+        res.status(200).json({ roomCode: roomCode, userId: userId, roomId: roomId });
       } catch (err) {
         res.status(500).json({ message: err.message });
       }
