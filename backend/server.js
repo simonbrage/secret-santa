@@ -3,6 +3,8 @@ const http = require('http');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const routes = require('./api/routes');
+const cron = require('node-cron');
+const { Room, Participant } = require('./model');
 require('dotenv').config();
 
 const app = express();
@@ -42,4 +44,19 @@ app.use('/api', routes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+// Scheduled task to run every hour
+cron.schedule('0 */2 * * *', async () => {
+  const cutoff = new Date();
+  cutoff.setHours(cutoff.getHours() - 24); // 24 hours ago
+
+  try {
+    const result = await Room.deleteMany({ createdAt: { $lt: cutoff } });
+    const currentTime = new Date();
+
+    console.log(`${result.deletedCount} room(s) deleted at ${currentTime.toLocaleString()}`);
+  } catch (err) {
+      console.error('Error deleting rooms at', new Date().toLocaleString(), ':', err);
+  }
 });
