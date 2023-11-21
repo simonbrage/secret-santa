@@ -14,7 +14,9 @@ const io = socketIo(server); // Setup Socket.IO
 
 app.use(express.json()); // For parsing application/json
 
-app.use(cors()); // Enable CORS for all routes
+app.use(cors({
+  origin: 'http://localhost:3001' // Allow only your React app to access
+})); // Enable CORS for all routes
 
 // Middleware to attach io to the req object
 app.use((req, res, next) => {
