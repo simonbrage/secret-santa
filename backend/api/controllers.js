@@ -44,7 +44,7 @@ exports.joinRoom = async (req, res) => {
             return res.status(400).json({ message: 'Username is required' });
         }
 
-        const room = await Room.findOne({ roomCode: roomCode });
+        const room = await Room.findOne({ roomCode: roomCode.toUpperCase() });
         if (!room) {
           return res.status(404).json({ message: "Room not found" });
         }
