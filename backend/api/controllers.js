@@ -147,3 +147,23 @@ exports.getRoomState = async (req, res) => {
         res.status(500).json({ message: err.message });
       }
 };
+
+exports.deleteRoom = async (req, res) => {
+  const { roomCode, userId } = req.body;
+
+  try {
+      const room = await Room.findOne({ roomCode: roomCode });
+      if (!room) {
+          return res.status(404).json({ message: "Room not found" });
+      }
+
+      if (room.ownerId.toString() !== userId) {
+          return res.status(403).json({ message: "Only the room owner can delete the room" });
+      }
+
+      await Room.deleteOne({ roomCode: roomCode });
+      res.status(200).json({ message: "Room deleted successfully" });
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+};
