@@ -1,0 +1,37 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const RoomLobby = () => {
+  const [roomData, setRoomData] = useState(null);
+  const { roomId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/room/${roomId}`);
+        setRoomData(response.data);
+      } catch (error) {
+        console.error('Error fetching room data', error);
+        navigate('/');
+      }
+    };
+
+    fetchRoomData();
+  }, [roomId, navigate]);
+
+  if (!roomData) {
+    return <div>Loading...</div>; // or some loading indicator
+  }
+
+  return (
+    <div>
+      {/* Display room information */}
+      <h1>Room Lobby: {roomData.roomCode}</h1>
+      {/* Rest of your component */}
+    </div>
+  );
+};
+
+export default RoomLobby;
