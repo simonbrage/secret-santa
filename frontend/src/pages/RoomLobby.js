@@ -29,12 +29,20 @@ const RoomLobby = () => {
   }
 
   return (
-    <div>
-      {/* Display room information */}
-      <h1>Room Lobby: {roomData.roomCode}</h1>
-      <h1>User: {userId}</h1>
-        <h1>Name: {userName}</h1>
-      {/* Rest of your component */}
+    <div className='flex flex-col h-screen justify-center items-center text-center p-12'>
+        <div className='flex flex-col h-1/2 justify-center items-center'>
+            <div className='mb-4'>
+                <p>Hello</p>
+                <h1>{userName}</h1>
+            </div>
+            <div>
+                <p>You are in room</p>
+                <h1>{roomData.roomCode}</h1>
+            </div>
+        </div>
+        <div className='flex flex-col h-1/2 justify-center items-center'>
+            <button>Start Game</button>
+        </div>
     </div>
   );
 };
