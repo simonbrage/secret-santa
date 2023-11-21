@@ -136,16 +136,16 @@ exports.placeGift = async (req, res) => {
 };
 
 exports.getRoomState = async (req, res) => {
-    try {
-        const roomCode = req.params.roomCode;
-        const room = await Room.findOne({ roomCode: roomCode });
-        if (!room) {
-          return res.status(404).json({ message: "Room not found" });
-        }
-        res.status(200).json(room);
-      } catch (err) {
-        res.status(500).json({ message: err.message });
-      }
+  try {
+    const roomId = req.params.roomId;
+    const room = await Room.findById(roomId);
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+    res.status(200).json(room);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.deleteRoom = async (req, res) => {
