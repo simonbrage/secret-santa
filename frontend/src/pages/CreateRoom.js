@@ -17,7 +17,7 @@ const CreateRoom = () => {
         try {
             const response = await axios.post('http://localhost:3000/api/create-room', { userName: name });
             const roomId = response.data.roomId;
-            navigate(`/room-lobby/${roomId}`);
+            navigate(`/room-lobby/${roomId}`, { state: { userId: response.data.userId, userName: name } });
         } catch (error) {
           console.error('There was an error creating the room', error);
           // Handle error (show message to user, etc.)
