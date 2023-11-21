@@ -8,6 +8,7 @@ const ParticipantSchema = new mongoose.Schema({
 
 const RoomSchema = new mongoose.Schema({
   roomId: mongoose.Schema.Types.ObjectId,
+  createdAt: { type: Date, default: Date.now },
   ownerId: mongoose.Schema.Types.ObjectId,
   roomCode: { type: String, unique: true },
   roomStatus: { type: Number, default: 0 }, // 0: Not started, 1: Started, 2: All gifts placed
