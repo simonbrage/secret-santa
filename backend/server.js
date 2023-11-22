@@ -51,13 +51,20 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Scheduled task to run every hour
+// Scheduled task to run every other hour
 cron.schedule('0 */2 * * *', async () => {
   const cutoff = new Date();
   cutoff.setHours(cutoff.getHours() - 24); // 24 hours ago
 
+  console.log(' ');
+  console.log(`Scheduled run at ${new Date().toLocaleString()}. Cutoff time: ${cutoff.toLocaleString()}`);
+
   try {
-    const result = await Room.deleteMany({ createdAt: { $lt: cutoff } });
+    console.log(`Attempting to delete rooms created before: ${cutoff.toLocaleString()}`);
+    const queryCondition = { createdAt: { $lt: cutoff } };
+    console.log(`Deletion condition: `, queryCondition);
+
+    const result = await Room.deleteMany(queryCondition);
     const currentTime = new Date();
 
     console.log(`${result.deletedCount} room(s) deleted at ${currentTime.toLocaleString()}`);
