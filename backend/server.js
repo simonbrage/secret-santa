@@ -10,7 +10,12 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server); // Setup Socket.IO
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3001", // Your client's URL
+    methods: ["GET", "POST"]
+  }
+});
 
 app.use(express.json()); // For parsing application/json
 
