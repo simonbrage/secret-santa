@@ -60,7 +60,8 @@ exports.joinRoom = async (req, res) => {
 };
 
 exports.startGame = async (req, res) => {
-    const { userId, roomCode } = req.body; 
+    const { userId, roomCode } = req.body;
+    const io = req.io; 
 
     try {
       const room = await Room.findOne({ roomCode: roomCode });
@@ -77,6 +78,7 @@ exports.startGame = async (req, res) => {
         room.roomStatus = 1;
         room.currentTurn = room.giftOrder[0]; // Start with the first participant
         await room.save();
+        io.to(roomCode).emit('gameStarted', room);
         res.status(200).json({ message: "Game started", room: room });
       } else {
         res.status(400).json({ message: "Not enough participants to start the game" });
