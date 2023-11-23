@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import io from 'socket.io-client';
+import { socket } from '../service/socket';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
