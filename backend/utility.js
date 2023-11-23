@@ -33,8 +33,25 @@ function shuffleArray(array) {
     return array;
 }
 
+const fetchRoomData = async (roomId) => {
+  try {
+    const room = await Room.findById(roomId);
+    if (!room) {
+      throw new Error('Room not found');
+    }
+    return room;
+  } catch (error) {
+    console.error('Error fetching room data:', error);
+    throw error; // Rethrow the error for handling it in the caller function
+  }
+};
+
+module.exports = { fetchRoomData };
+
+
 // Export functions
 module.exports = {
     createUniqueRoomCode,
-    shuffleArray
+    shuffleArray,
+    fetchRoomData
 };
