@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const routes = require('./api/routes');
 const cron = require('node-cron');
 const { Room, Participant } = require('./model');
+const { fetchRoomData } = require('./utility');
 require('dotenv').config();
 
 const app = express();
@@ -40,9 +41,26 @@ mongoose.connect(MONGODB_URI)
 io.on('connection', (socket) => {
   console.log('New client connected', socket.id);
 
-  socket.on('joinRoom', (roomCode) => {
-    socket.join(roomCode);
-    console.log(`A user joined room: ${roomCode}`);
+  socket.on('joinRoom', async (roomId, userId, userName) => {
+    socket.join(roomId);
+    console.log(`${userName} (ID: ${userId}) joined room: ${roomId}`);
+
+    // Fetch and send updated room data
+    const updatedRoomData = await fetchRoomData(roomId);
+    io.to(roomId).emit('updateRoom', updatedRoomData);
+  });
+
+  socket.on('gameStarted', (roomId, updatedRoomData) => {
+    io.to(roomId).emit('updateRoom', updatedRoomData);
+  });
+
+  socket.on('giftPlaced', (roomId, updatedRoomData) => {
+    io.to(roomId).emit('updateRoom', updatedRoomData);
+  });
+
+  socket.on('leaveRoom', (roomId, userId, userName) => {
+    socket.leave(roomId);
+    console.log(`${userName} (ID: ${userId}) left room: ${roomId}`);
   });
 
   socket.on('disconnect', () => {
