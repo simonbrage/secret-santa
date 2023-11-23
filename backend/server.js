@@ -33,7 +33,7 @@ mongoose.connect(MONGODB_URI)
   .catch(err => console.log(err));
 
 io.on('connection', (socket) => {
-  console.log('New client connected');
+  console.log('New client connected', socket.id);
 
   socket.on('joinRoom', (roomCode) => {
     socket.join(roomCode);
