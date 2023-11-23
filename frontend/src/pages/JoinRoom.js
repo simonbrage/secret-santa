@@ -36,7 +36,7 @@ const JoinRoom = () => {
       <div className="flex flex-col justify-center items-center h-44">
         <div className='flex flex-col'>
             <input type="text" value={roomCode} onChange={(e) => setRoomCode(e.target.value)} placeholder="Room code..." className="border-2 border-gray-300 rounded-xl mb-2 p-4 text-center font-bold text-lg" />
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="What's your name?" className="border-2 border-gray-300 rounded-xl mb-3 p-4 text-center font-bold text-lg" />
+            <input type="text" maxLength="12" value={name} onChange={(e) => setName(e.target.value)} placeholder="What's your name?" className="border-2 border-gray-300 rounded-xl mb-3 p-4 text-center font-bold text-lg" />
         </div>
         <button onClick={handleJoin} className="bg-xmasBrightGreen hover:bg-xmasGreen text-white font-bold py-2 mb-6 w-full rounded-xl drop-shadow-md border-none">
             Join Room
