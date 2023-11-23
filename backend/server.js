@@ -13,7 +13,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3001", // Your client's URL
+    origin: '*', // No restrictions on origin
     methods: ["GET", "POST"]
   }
 });
@@ -21,8 +21,8 @@ const io = socketIo(server, {
 app.use(express.json()); // For parsing application/json
 
 app.use(cors({
-  origin: 'http://localhost:3001' // Allow only your React app to access
-})); // Enable CORS for all routes
+  origin: '*' // No restrictions on origin
+})); 
 
 // Middleware to attach io to the req object
 app.use((req, res, next) => {
