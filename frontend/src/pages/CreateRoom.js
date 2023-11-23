@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import { Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateRoom = () => {
     const [name, setName] = useState('');
@@ -10,7 +12,7 @@ const CreateRoom = () => {
   
     const handleCreate = async () => {
         if (!name) {
-          alert("Please enter your name");
+          toast("Please enter your name");
           return;
         }
       
@@ -18,9 +20,10 @@ const CreateRoom = () => {
             const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/create-room`, { userName: name });
             const roomId = response.data.roomId;
             navigate(`/room-lobby/${roomId}`, { state: { userId: response.data.userId, userName: name } });
+            toast.success("Room created!");
         } catch (error) {
           console.error('There was an error creating the room', error);
-          // Handle error (show message to user, etc.)
+          toast.error("There was an error creating the room");
         }
     };
 
@@ -34,7 +37,8 @@ const CreateRoom = () => {
         <Link to="/" className="inline-flex bg-gray-500 hover:bg-gray-700 text-white text-center items-center justify-center font-bold w-10 h-10 drop-shadow-md border-none rounded-full">
             <CloseIcon className="m-3" />
         </Link>
-      </div>  
+      </div> 
+      <ToastContainer position="top-center" transition={Slide} pauseOnFocusLoss={false} pauseOnHover={false} hideProgressBar={true} autoClose={4000} /> 
     </div>
   );
 };

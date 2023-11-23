@@ -4,6 +4,8 @@ import axios from 'axios';
 import { socket } from '../service/socket';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RoomLobby = () => {
   const [roomData, setRoomData] = useState(null);
@@ -87,7 +89,7 @@ const RoomLobby = () => {
   
   const copyToClipboard = () => {
     navigator.clipboard.writeText(roomData.roomCode);
-    alert('Room code copied to clipboard!');
+    toast('Room code copied to clipboard!');
   };
 
   const startGame = async () => {
@@ -174,6 +176,7 @@ const RoomLobby = () => {
           </>
         )}
       </div>
+      <ToastContainer position="top-center" transition={Slide} pauseOnFocusLoss={false} pauseOnHover={false} hideProgressBar={true} autoClose={4000} />
     </div>
   );
 };
