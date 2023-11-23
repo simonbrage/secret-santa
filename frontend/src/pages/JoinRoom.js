@@ -22,7 +22,7 @@ const JoinRoom = () => {
         }
     
         try {
-            const response = await axios.post('http://localhost:3000/api/join-room', { userName: name, roomCode: roomCode });
+            const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/join-room`, { userName: name, roomCode: roomCode });
             const roomId = response.data.roomId;
             navigate(`/room-lobby/${roomId}`, { state: { userId: response.data.userId, userName: name } });
         } catch (error) {

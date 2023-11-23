@@ -15,7 +15,7 @@ const CreateRoom = () => {
         }
       
         try {
-            const response = await axios.post('http://localhost:3000/api/create-room', { userName: name });
+            const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/create-room`, { userName: name });
             const roomId = response.data.roomId;
             navigate(`/room-lobby/${roomId}`, { state: { userId: response.data.userId, userName: name } });
         } catch (error) {

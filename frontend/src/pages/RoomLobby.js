@@ -19,7 +19,7 @@ const RoomLobby = () => {
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/room/${roomId}`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/room/${roomId}`);
         setRoomData(response.data);
       } catch (error) {
         console.error('Error fetching room data', error);
@@ -92,7 +92,7 @@ const RoomLobby = () => {
 
   const startGame = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/start-game', { userId: userId, roomCode: roomData.roomCode });
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/start-game`, { userId: userId, roomCode: roomData.roomCode });
       setRoomData(response.data.room);
       socket.emit('gameStarted', roomId, response.data.room); // Assuming response contains updated room data
     } catch (error) {
@@ -102,7 +102,7 @@ const RoomLobby = () => {
 
   const placeGift = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/place-gift', { userId, roomCode: roomData.roomCode });
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/place-gift`, { userId, roomCode: roomData.roomCode });
       setRoomData(response.data.room);
       socket.emit('giftPlaced', roomId, response.data.room);
     } catch (error) {
