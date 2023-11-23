@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import io from 'socket.io-client';
 import { socket } from '../service/socket';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -10,6 +9,7 @@ const RoomLobby = () => {
   const [roomData, setRoomData] = useState(null);
   const [iconSize, setIconSize] = useState('default');
   const [dotCount, setDotCount] = useState(1);
+
   const { roomId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,12 +57,34 @@ const RoomLobby = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const dots = '.'.repeat(dotCount);
+  useEffect(() => {
+    socket.connect();
+  
+    socket.on('connect', () => {
+      console.log("Socket connected:", socket.connected);
+      socket.emit('joinRoom', roomId, userId, userName);
+    });
+  
+    return () => {
+      socket.emit('leaveRoom', roomId, userId, userName);
+      socket.disconnect();
+      console.log('Disconnected from server')
+    };
+  }, [roomId, userId, userName]);
 
-  if (!roomData) {
-    return <div>Loading...</div>; // or some loading indicator
-  }
+  useEffect(() => {
+    socket.on('updateRoom', (updatedRoom) => {
+      setRoomData(updatedRoom);
+    });
+  }, []);
 
+  useEffect(() => {
+    if (roomData && roomData.roomStatus === 2) {
+      // Disconnect the socket when the game is over
+      socket.disconnect();
+    }
+  }, [roomData]);
+  
   const copyToClipboard = () => {
     navigator.clipboard.writeText(roomData.roomCode);
     alert('Room code copied to clipboard!');
@@ -70,9 +92,9 @@ const RoomLobby = () => {
 
   const startGame = async () => {
     try {
-      await axios.post('http://localhost:3000/api/start-game', { userId: userId, roomCode: roomData.roomCode });
-      setRoomData(prevData => ({ ...prevData, roomStatus: 1 }));
-      // Emit a socket event if using WebSockets
+      const response = await axios.post('http://localhost:3000/api/start-game', { userId: userId, roomCode: roomData.roomCode });
+      setRoomData(response.data.room);
+      socket.emit('gameStarted', roomId, response.data.room); // Assuming response contains updated room data
     } catch (error) {
       console.error('Error starting the game', error);
     }
@@ -80,8 +102,9 @@ const RoomLobby = () => {
 
   const placeGift = async () => {
     try {
-      await axios.post('http://localhost:3000/api/place-gift', { userId: userId, roomCode: roomData.roomCode });
-      // Update UI based on response or wait for WebSocket event
+      const response = await axios.post('http://localhost:3000/api/place-gift', { userId, roomCode: roomData.roomCode });
+      setRoomData(response.data.room);
+      socket.emit('giftPlaced', roomId, response.data.room);
     } catch (error) {
       console.error('Error placing gift', error);
     }
@@ -94,14 +117,14 @@ const RoomLobby = () => {
   }
 
   if (!roomData) {
-    return <div>Loading{dots}</div>; // or some loading indicator
+    return <div>Loading{dots}</div>;
   }
 
   return (
-    <div className='flex flex-col h-screen justify-center items-center text-center w-full sm:py-12 py-12 xl:px-80 lg:px-72 md:px-40 xs:px-12 px-2'>
+    <div className='overflow-y-scroll flex flex-col h-screen justify-center items-center text-center w-full sm:py-12 py-4 xl:px-80 lg:px-72 md:px-40 xs:px-12 px-2'>
       <div className='flex flex-col h-2/6 justify-end items-center w-full mb-4'>
         <div className='flex flex-col mb-4'>
-          <h1 className='font-bold text-7xl text-gray-900'>{userName}</h1>
+          <h1 className='font-black md:text-4xl lg:text-5xl text-3xl text-gray-900 mb-2'>{userName}</h1>
           <p className='text-xs'>Player ID: {userId}</p>
         </div>
         <div className='flex flex-col rounded-2xl bg-opacity-20 bg-xmasDarkestGreen w-full justify-center items-center sm:py-12 py-4'>
@@ -127,7 +150,7 @@ const RoomLobby = () => {
       <div className='flex flex-col h-1/6 justify-center items-center'>
         {roomData.roomStatus === 0 && userId === roomData.ownerId && (
           <>
-            <button onClick={startGame} className="bg-xmasBrightGreen hover:bg-xmasGreen text-white text-xl font-bold py-3 px-6 rounded-xl">Start</button>
+            <button onClick={startGame} className="bg-xmasBrightGreen hover:bg-xmasGreen text-white text-xl font-bold py-3 px-6 rounded-2xl">Start</button>
           </>
         )}
         {roomData.roomStatus === 0 && userId !== roomData.ownerId && (
@@ -137,8 +160,8 @@ const RoomLobby = () => {
         )}
         {roomData.roomStatus === 1 && userId === roomData.currentTurn && (
           <>
-            <p className='font-bold text-xl text-gray-900'>Your turn! Leave your room and click the button below when you have returned.</p>
-            <button onClick={placeGift} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Place Gift</button>
+            <p className='font-bold text-xl text-gray-900 mb-4'>Your turn!</p>
+            <button onClick={placeGift} className="inline-flex text-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-2xl">Done</button>
           </>
         )}
         {roomData.roomStatus === 1 && userId !== roomData.currentTurn && (
@@ -146,8 +169,8 @@ const RoomLobby = () => {
         )}
         {roomData.roomStatus === 2 && (
           <>
-            <p className='font-bold text-xl text-gray-900'>You did it!</p>
-            <button onClick={() => navigate('/')} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Home</button>
+            <p className='font-bold text-xl text-gray-900 mb-4'>You did it!</p>
+            <button onClick={() => navigate('/')} className="bg-xmasRed hover:bg-xmasDarkRed text-white font-bold py-3 px-6 rounded-2xl">Finish</button>
           </>
         )}
       </div>
