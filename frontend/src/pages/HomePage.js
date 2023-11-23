@@ -9,7 +9,7 @@ const HomePage = () => {
         <Link to="/create-room" className="inline-flex justify-center items-center bg-xmasBrightGreen hover:bg-xmasGreen text-white font-bold xs:h-28 xs:w-28 h-24 w-24 py-10 px-10 rounded-full drop-shadow-md mr-2">
         Create
         </Link>
-        <Link to="/join-room" className="inline-flex justify-center items-center bg-xmasBrightRed hover:bg-xmasRed text-white font-bold xs:h-28 xs:w-28 h-24 w-24 py-10 px-10 rounded-full drop-shadow-md ml-2">
+        <Link to="/join-room" className="inline-flex justify-center items-center bg-xmasBrightRed hover:bg-xmasDarkRed text-white font-bold xs:h-28 xs:w-28 h-24 w-24 py-10 px-10 rounded-full drop-shadow-md ml-2">
         Join
         </Link>
       </div>
