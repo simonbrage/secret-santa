@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
 
 app.use('/api', routes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
