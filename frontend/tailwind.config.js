@@ -28,6 +28,8 @@ module.exports = {
         xmasGreen: '#2A850E',
         xmasDarkGreen: '#2D661B',
         xmasDarkestGreen: '#005C00',
+        xmasBlue: '#69DDFF',
+        xmasDarkBlue: '#219DC7',
       }
     },
   },
