@@ -68,6 +68,25 @@ const RoomLobby = () => {
     alert('Room code copied to clipboard!');
   };
 
+  const startGame = async () => {
+    try {
+      await axios.post('http://localhost:3000/api/start-game', { userId: userId, roomCode: roomData.roomCode });
+      setRoomData(prevData => ({ ...prevData, roomStatus: 1 }));
+      // Emit a socket event if using WebSockets
+    } catch (error) {
+      console.error('Error starting the game', error);
+    }
+  };
+
+  const placeGift = async () => {
+    try {
+      await axios.post('http://localhost:3000/api/place-gift', { userId: userId, roomCode: roomData.roomCode });
+      // Update UI based on response or wait for WebSocket event
+    } catch (error) {
+      console.error('Error placing gift', error);
+    }
+  };
+
   const dots = '.'.repeat(dotCount);
 
   if (!userId || !userName) {
@@ -108,7 +127,7 @@ const RoomLobby = () => {
       <div className='flex flex-col h-1/6 justify-center items-center'>
         {roomData.roomStatus === 0 && userId === roomData.ownerId && (
           <>
-            <button className="bg-xmasBrightGreen hover:bg-xmasGreen text-white text-xl font-bold py-3 px-6 rounded-xl">Start</button>
+            <button onClick={startGame} className="bg-xmasBrightGreen hover:bg-xmasGreen text-white text-xl font-bold py-3 px-6 rounded-xl">Start</button>
           </>
         )}
         {roomData.roomStatus === 0 && userId !== roomData.ownerId && (
@@ -119,7 +138,7 @@ const RoomLobby = () => {
         {roomData.roomStatus === 1 && userId === roomData.currentTurn && (
           <>
             <p className='font-bold text-xl text-gray-900'>Your turn! Leave your room and click the button below when you have returned.</p>
-            <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Place Gift</button>
+            <button onClick={placeGift} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Place Gift</button>
           </>
         )}
         {roomData.roomStatus === 1 && userId !== roomData.currentTurn && (
