@@ -68,6 +68,16 @@ const RoomLobby = () => {
     alert('Room code copied to clipboard!');
   };
 
+  const dots = '.'.repeat(dotCount);
+
+  if (!userId || !userName) {
+    return <div className='w-full h-screen flex justify-center items-center font-black text-5xl p-6 text-center text-gray-900'>Oops, I think you took a wrong turn!</div>;
+  }
+
+  if (!roomData) {
+    return <div>Loading{dots}</div>; // or some loading indicator
+  }
+
   return (
     <div className='flex flex-col h-screen justify-center items-center text-center w-full sm:py-12 py-12 xl:px-80 lg:px-72 md:px-40 xs:px-12 px-2'>
       <div className='flex flex-col h-2/6 justify-end items-center w-full mb-4'>
