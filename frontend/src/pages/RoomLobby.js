@@ -119,7 +119,7 @@ const RoomLobby = () => {
   }
 
   if (!roomData) {
-    return <div>Loading{dots}</div>;
+    return <div className='flex flex-col h-screen w-full items-center justify-center'>Loading{dots}</div>;
   }
 
   return (
