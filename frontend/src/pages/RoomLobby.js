@@ -129,7 +129,7 @@ const RoomLobby = () => {
           <h1 className='font-black md:text-4xl lg:text-5xl text-3xl text-gray-900 mb-2'>{userName}</h1>
           <p className='text-xs'>Player ID: {userId}</p>
         </div>
-        <div className='flex flex-col rounded-2xl bg-opacity-20 bg-xmasDarkestGreen w-full justify-center items-center sm:py-12 py-4'>
+        <div className='flex flex-col rounded-2xl bg-opacity-20 bg-xmasDarkestGreen w-full justify-center items-center sm:py-8 py-4'>
           <p>You are in room</p>
           <div className="flex flex-row mt-2">
             <h1 className='flex justify-center items-center font-black xxl:text-5xl sm:text-3xl text-2xl mr-2 text-gray-900'>{roomData.roomCode}</h1>
