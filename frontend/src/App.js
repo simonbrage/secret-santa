@@ -7,7 +7,7 @@ import RoomLobby from './pages/RoomLobby';
 
 function App() {
   return (
-    <Router>
+    <Router basename={"/secret-santa"}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create-room" element={<CreateRoom />} />
