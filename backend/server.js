@@ -1,19 +1,26 @@
 const express = require('express');
 const cors = require('cors');
-const http = require('http');
+const https = require('https');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const routes = require('./api/routes');
 const cron = require('node-cron');
-const { Room, Participant } = require('./model');
-const { fetchRoomData } = require('./utility');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
-const server = http.createServer(app);
+
+// HTTPS options
+const options = {
+  pfx: fs.readFileSync(process.env.PFX_PATH),
+  passphrase: process.env.PFX_PASS // Replace with your PFX passphrase if any
+};
+
+// Creating HTTPS server
+const server = https.createServer(options, app);
 const io = socketIo(server, {
   cors: {
-    origin: '*', // No restrictions on origin
+    origin: '*',
     methods: ["GET", "POST"]
   }
 });
@@ -30,7 +37,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
