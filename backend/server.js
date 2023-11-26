@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const routes = require('./api/routes');
 const cron = require('node-cron');
 const fs = require('fs');
+const { Room, Participant } = require('./model');
+const { fetchRoomData } = require('./utility');
 require('dotenv').config();
 
 const app = express();
