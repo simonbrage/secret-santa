@@ -7,7 +7,7 @@ Here's how it works:
 1. **Room Creation**: Users can create a room. This process generates a unique room object in the MongoDB database and provides a room key.
 2. **Joining a Room**: Participants can enter the game by using the room key to join the designated room.
 3. **Starting the Game**: The game begins when the room owner activates the "Start game" feature. This triggers the app to randomly assign the order of turns for participants.
-4. **Gameplay**: Participants take turns placing their gifts under a real Christmas tree in the order set by the app. This ensures that the gift-giver's identity remains a secret.
+4. **Gameplay**: Participants take turns placing their gifts under a Christmas tree in the order set by the app. This ensures that the gift-giver's identity remains a secret.
 
 An important aspect of the game is the need for a designated area where players wait without seeing who is placing their gift. This maintains the element of surprise and anonymity, which is crucial to the Secret Santa experience.
 
