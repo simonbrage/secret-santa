@@ -9,9 +9,7 @@ Here's how it works:
 3. **Starting the Game**: The game begins when the room owner activates the "Start game" feature. This triggers the app to randomly assign the order of turns for participants.
 4. **Gameplay**: Participants take turns placing their gifts under a Christmas tree (or a location of their choosing) in the order set by the app. This ensures that the gift-giver's identity remains a secret.
 
-An important aspect of the game is the need for a designated area where players wait without seeing who is placing their gift. This maintains the element of surprise and anonymity, which is crucial to the Secret Santa experience. In smaller spaces, playing loud music can also help mask the sound of footsteps. 
-
-The app's goal is to simplify the organization of Secret Santa games while keeping the excitement and mystery of the traditional gift exchange alive.
+An important aspect of the game is the need for a designated area where players wait without seeing who is placing their gift. This maintains the element of surprise and anonymity, which is crucial to the Secret Santa experience. In smaller spaces, playing loud music can also help mask the sound of footsteps.
 
 ## Setup
 
